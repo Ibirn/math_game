@@ -39,4 +39,13 @@ class Game
   def toggle_turn
     @turn = (@turn + 1) % 2
   end
+  
+  def game_over?
+    if @players[@turn].lives == 0
+      toggle_turn
+      puts "#{@players[@turn].name} wins with a score of #{@players[@turn].lives}!"
+      puts "----- GAME OVER -----"
+      exit(0)
+    end
+  end
 end
