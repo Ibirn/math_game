@@ -3,26 +3,26 @@ require './questions'
 
 class Game
 
-  attr_accessor :p1, :p2, :turn
+  attr_accessor :p1, :p2, :turn, :current_player
 
   def initialize
     @p1 = Player.new("Player 1")
     @p2 = Player.new("Player 2")
     @players = [@p1, @p2]
     @turn = 0
-    turn
+    @current_player = @p1
   end
 
-  def turn
-    @question = Question.new
-    @question.ask_question(@players[@turn].name)
-    @players[@turn].answer = gets.chomp.to_i
-    if @players[@turn].answer == @question.answer
+  def start_round
+    @question = Question.new(@turn)
+    @question.ask_question(@current_player.name)
+    @current_player.answer = gets.chomp.to_i
+    if @current_player.answer == @question.answer
       puts "Yes! You are correct!"
       round_change
     else
-      puts "Seriously? No!"
-      @players[@turn].lose_life
+      puts "Seriously? No! It's #{@question.answer}"
+      @current_player.lose_life
       round_change
     end
   end
@@ -32,17 +32,18 @@ class Game
     game_over?
     puts "----- NEW TURN -----"
     toggle_turn
-    turn
+    start_round
   end
 
   def toggle_turn
-    @turn = (@turn + 1) % 2
+    @turn += 1
+    @current_player = @players[@turn % 2]
   end
   
   def game_over?
-    if @players[@turn].lives == 0
+    if @current_player.lives == 0
       toggle_turn
-      puts "#{@players[@turn].name} wins with a score of #{@players[@turn].lives}!"
+      puts "#{@current_player.name} wins with a score of #{@current_player.lives} in #{@turn} turns!"
       puts "----- GAME OVER -----"
       exit(0)
     end
