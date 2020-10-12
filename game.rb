@@ -14,7 +14,6 @@ class Game
   end
 
   def turn
-    puts "#{@turn}"
     @question = Question.new
     @question.ask_question(@players[@turn].name)
     @players[@turn].answer = gets.chomp.to_i
