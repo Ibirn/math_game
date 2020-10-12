@@ -20,10 +20,23 @@ class Game
     @players[@turn].answer = gets.chomp.to_i
     if @players[@turn].answer == @question.answer
       puts "Yes! You are correct!"
+      round_change
     else
       puts "Seriously? No!"
       @players[@turn].lose_life
+      round_change
     end
   end
 
+  def round_change
+    puts "P1: #{@p1.lives}/3 vs P2: #{@p2.lives}/3"
+    game_over?
+    puts "----- NEW TURN -----"
+    toggle_turn
+    turn
+  end
+
+  def toggle_turn
+    @turn = (@turn + 1) % 2
+  end
 end
